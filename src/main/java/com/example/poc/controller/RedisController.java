@@ -16,13 +16,11 @@ public class RedisController {
             System.out.println("uid: " + uid);
             Redis redis = new Redis();
             if (redis.get("uid").equals(uid)) {
-                redis.Close();
                 Map<String, String> response = new HashMap<>();
                 response.put("message", "UID already exists in Redis");
                 return response;
             }
             redis.set("uid", uid, 20);
-            redis.Close();
             Map<String, String> response = new HashMap<>();
             response.put("message", "UID " + uid + " saved in Redis");
 
@@ -33,7 +31,6 @@ public class RedisController {
         public String get() {
             Redis redis = new Redis();
             String uid = redis.get("uid");
-            redis.Close();
             return uid;
         }
 }
