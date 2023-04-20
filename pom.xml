@@ -28,5 +28,10 @@
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>1.68</version>
 		</dependency>
+		<dependency>
+			<groupId>biz.paluch.redis</groupId>
+			<artifactId>lettuce</artifactId>
+			<version>3.2.Final</version>
+		</dependency>
 	</dependencies>
 </project>
