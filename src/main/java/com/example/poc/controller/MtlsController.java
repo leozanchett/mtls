@@ -1,29 +1,48 @@
 package com.example.poc.controller;
 
+import com.example.poc.entities.ValidarAssinaturaDigital;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Base64;
-
+import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/mtls")
 public class MtlsController {
 
     @GetMapping
-    public String mTLS(@RequestHeader("access-signature") String acessSignature) throws IllegalAccessException {
-        System.out.println("access-signature: " + acessSignature);
-        try {
-            byte[] xBytes = Base64.getUrlDecoder().decode("AbFCmkni9pvGC1o9uAOhPGfgveJrk9Y4NgtNHLyb6FtgwgMHXSMZPoFLsA03neFa1i2-36GnT_zTydSbyMZMS9Py".getBytes());
-            byte[] yBytes = Base64.getUrlDecoder().decode("AXR3qFe3LBJvY7pXrBw3bQdUP6ozsHZqa7VIFUVGnY5a7iakifA6QeGmtNbcGI9y32nJzHorDcYKLQ38BUbWd9JM".getBytes());
-            String curveName = "secp521r1";
+    public Map<String, String> mTLS(@RequestHeader("access-signature") String accessSignature, @RequestHeader("mensagem") String mensagem) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, InvalidKeySpecException {
+//        GerarAssinaturaDigital assinaturaDigital = new GerarAssinaturaDigital();
+//        byte[] assinatura = assinaturaDigital.geraAssinatura(mensagem);
+//        byte[] assinatura = Base64.getDecoder().decode(accessSignature);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        byte[] assinaturaBytes = Hex.decode(accessSignature);
 
-        return "Hello World!";
+        ValidarAssinaturaDigital validarAssinaturaDigital = new ValidarAssinaturaDigital();
+//        boolean valida = validarAssinaturaDigital.assinar(assinatura , assinaturaDigital.getPubKey().getEncoded());
+        boolean valida = validarAssinaturaDigital.assinar(assinaturaBytes, validarAssinaturaDigital.getPubKey());
+        Map<String, String> response = new HashMap<>();
+        response.put("Assinatura valida? ", String.valueOf(valida));
+        return response;
+    }
+
+    public byte[] tratarFormatoAssinatura(String accessSignature) {
+        byte[] assinaturaBytes = Hex.decode(accessSignature);
+        return assinaturaBytes;
     }
 }
+
+
