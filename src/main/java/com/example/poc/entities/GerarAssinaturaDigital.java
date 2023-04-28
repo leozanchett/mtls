@@ -14,7 +14,7 @@ public class GerarAssinaturaDigital {
         }
 
         public byte[] geraAssinatura(String mensagem) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InvalidAlgorithmParameterException {
-            Signature sig = Signature.getInstance("SHA512withECDSA");
+            Signature sig = Signature.getInstance("SHA256withECDSA");
 
             //Geração das chaves públicas e privadas
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
